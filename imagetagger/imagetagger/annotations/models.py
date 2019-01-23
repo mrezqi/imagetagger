@@ -400,6 +400,7 @@ class AnnotationType(models.Model):
         LINE = 3
         MULTI_LINE = 4
         POLYGON = 5
+        YES_OR_NO = 6
 
     name = models.CharField(max_length=20, unique=True)
     active = models.BooleanField(default=True)
@@ -427,6 +428,8 @@ class AnnotationType(models.Model):
             return 'Polygon'
         if vector_type is AnnotationType.VECTOR_TYPE.MULTI_LINE:
             return 'Multi Line'
+        if vector_type is AnnotationType.VECTOR_TYPE.YES_OR_NO:
+            return 'Yes or No'
 
     def validate_vector(self, vector: Union[dict, None]) -> bool:
         """
