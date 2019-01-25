@@ -251,6 +251,8 @@ def export_format(export_format_name, imageset):
                         verification_difference__gte=min_verifications,
                         annotation_type__in=export_format.annotations_types.all())\
                 .select_related('image')
+            if not export_format.include_crystal_clear:
+                annotations = annotations.exclude(_crystal_clear=True)
             if not export_format.include_blurred:
                 annotations = annotations.exclude(_blurred=True)
             if not export_format.include_concealed:
@@ -286,6 +288,8 @@ def export_format(export_format_name, imageset):
                                 vector_line = vector_line.replace(key, str(value))
                             formatted_vector += vector_line
                         formatted_annotation = export_format.annotation_format
+                        formatted_annotation = apply_conditional(formatted_annotation, '%%ifcrystal_clear', annotation.crystal_clear)
+                        formatted_annotation = apply_conditional(formatted_annotation, '%%ifnotcrystal_clear', not annotation.crystal_clear)
                         formatted_annotation = apply_conditional(formatted_annotation, '%%ifblurred', annotation.blurred)
                         formatted_annotation = apply_conditional(formatted_annotation, '%%ifnotblurred', not annotation.blurred)
                         formatted_annotation = apply_conditional(formatted_annotation, '%%ifconcealed', annotation.concealed)
@@ -344,6 +348,8 @@ def export_format(export_format_name, imageset):
             .filter(image__in=images,
                     verification_difference__gte=min_verifications,
                     annotation_type__in=export_format.annotations_types.all())
+        if not export_format.include_crystal_clear:
+            annotations = annotations.exclude(_crystal_clear=True)
         if not export_format.include_blurred:
             annotations = annotations.exclude(_blurred=True)
         if not export_format.include_concealed:
@@ -378,6 +384,8 @@ def export_format(export_format_name, imageset):
                         vector_line = vector_line.replace(key, str(value))
                     formatted_vector += vector_line
                 formatted_annotation = export_format.annotation_format
+                formatted_annotation = apply_conditional(formatted_annotation, '%%ifcrystal_clear', annotation.crystal_clear)
+                formatted_annotation = apply_conditional(formatted_annotation, '%%ifnotcrystal_clear', not annotation.crystal_clear)
                 formatted_annotation = apply_conditional(formatted_annotation, '%%ifblurred', annotation.blurred)
                 formatted_annotation = apply_conditional(formatted_annotation, '%%ifnotblurred', not annotation.blurred)
                 formatted_annotation = apply_conditional(formatted_annotation, '%%ifconcealed', annotation.concealed)
@@ -546,6 +554,7 @@ def create_annotation(request) -> Response:
         image_id = int(request.data['image_id'])
         annotation_type_id = int(request.data['annotation_type_id'])
         vector = request.data['vector']
+        crystal_clear = request.data['crystal_clear']
         blurred = request.data['blurred']
         concealed = request.data['concealed']
     except (KeyError, TypeError, ValueError):
@@ -591,6 +600,7 @@ def create_annotation(request) -> Response:
             image=image,
             annotation_type=annotation_type,
             user=request.user,
+            _crystal_clear=crystal_clear,
             _blurred=blurred,
             _concealed=concealed
         )
@@ -779,6 +789,7 @@ def update_annotation(request) -> Response:
         image_id = int(request.data['image_id'])
         annotation_type_id = int(request.data['annotation_type_id'])
         vector = request.data['vector']
+        crystal_clear = request.data['crystal_clear']
         blurred = request.data['blurred']
         concealed = request.data['concealed']
     except (KeyError, TypeError, ValueError):
@@ -826,6 +837,7 @@ def update_annotation(request) -> Response:
     with transaction.atomic():
         annotation.annotation_type = annotation_type
         annotation.vector = vector
+        annotation._crystal_clear = crystal_clear
         annotation._concealed = concealed
         annotation._blurred = blurred
         annotation.last_editor = request.user
