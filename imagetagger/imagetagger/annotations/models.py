@@ -463,6 +463,8 @@ class AnnotationType(models.Model):
             return self._validate_polygon(vector)
         if self.vector_type == AnnotationType.VECTOR_TYPE.MULTI_LINE:
             return self._validate_multi_line(vector)
+        if self.vector_type == AnnotationType.VECTOR_TYPE.YES_OR_NO:
+            return True
 
         # No valid vector type given.
         return False

@@ -737,6 +737,19 @@ function calculateImageScale() {
           }
         }
         return true;
+      case 6:
+        let crystal_clear = $('#crystal_clear').is(':checked');
+        let blurred = $('#blurred').is(':checked');
+        let concealed = $('#concealed').is(':checked');
+        let not_in_image = $('#not_in_image').is(':checked');
+
+        if (not_in_image) {
+            return true;
+        }
+        else if (crystal_clear || blurred || concealed) {
+            return true;
+        }
+        return false;
     }
     return false;
   }
