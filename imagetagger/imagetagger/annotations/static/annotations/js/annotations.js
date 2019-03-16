@@ -170,7 +170,6 @@ function calculateImageScale() {
       displayFeedback($('#feedback_annotation_type_missing'));
       return;
     }
-    let crystal_clear = $('#crystal_clear').is(':checked');
     let blurred = $('#blurred').is(':checked');
     let concealed = $('#concealed').is(':checked');
     if (!$('#not_in_image').is(':checked')) {
@@ -211,7 +210,6 @@ function calculateImageScale() {
       annotation_type_id: annotationTypeId,
       image_id: gImageId,
       vector: vector,
-      crystal_clear: crystal_clear,
       concealed: concealed,
       blurred: blurred
     };
@@ -307,7 +305,6 @@ function calculateImageScale() {
         id: 'annotation_type_' + (key + 1),
         'data-vector-type': annotationType.vector_type,
         'data-node-count': annotationType.node_count,
-        'data-crystal_clear': annotationType.enable_crystal_clear,
         'data-blurred': annotationType.enable_blurred,
         'data-concealed': annotationType.enable_concealed,
       }));
@@ -417,10 +414,6 @@ function calculateImageScale() {
       } else {
         annotation.content = 'not in image';
       }
-      if (annotation.crystal_clear) {
-        annotation.content += ' <span id="crystal_clear_label" class="label label-info">Crystal Clear</span>';
-      }
-
       if (annotation.blurred) {
         annotation.content += ' <span id="blurred_label" class="label label-info">Blurred</span>';
       }
@@ -449,7 +442,6 @@ function calculateImageScale() {
       editButton.data('annotationtypeid', annotation.annotation_type.id);
       editButton.data('annotationid', annotation.id);
       editButton.data('vector', annotation.vector);
-      editButton.data('crystal_clear', annotation.crystal_clear);
       editButton.data('blurred', annotation.blurred);
       editButton.data('concealed', annotation.concealed);
       deleteButton.click(function(event) {
@@ -668,7 +660,6 @@ function calculateImageScale() {
 
 
     tool.reloadSelection(annotationId, annotationData);
-    $('#crystal_clear').prop('checked', annotationElem.data('crystal_clear')).change();
     $('#concealed').prop('checked', annotationElem.data('concealed')).change();
     $('#blurred').prop('checked', annotationElem.data('blurred')).change();
   }
@@ -742,20 +733,11 @@ function calculateImageScale() {
   }
 
   function setupCBCheckboxes() {
-    let crystal_clear = $('#crystal_clear');
-    let crystal_clearP = $('#crystal_clear_p');
     let concealed = $('#concealed');
     let concealedP = $('#concealed_p');
     let blurred = $('#blurred');
     let blurredP = $('#blurred_p');
     let selectedAnnotation = $('#annotation_type_id').find(':selected');
-    if (selectedAnnotation.data('crystal_clear')) {
-      crystal_clearP.show();
-      crystal_clear.prop('disabled', false);
-    } else {
-      crystal_clearP.hide();
-      crystal_clear.prop('disabled', true);
-    }
     if (selectedAnnotation.data('concealed')) {
       concealedP.show();
       concealed.prop('disabled', false);
@@ -773,15 +755,10 @@ function calculateImageScale() {
   }
 
   function hideCBCheckboxes() {
-    let crystal_clear = $('#crystal_clear');
-    let crystal_clearP = $('#crystal_clear_p');
     let concealed = $('#concealed');
     let concealedP = $('#concealed_p');
     let blurred = $('#blurred');
     let blurredP = $('#blurred_p');
-    crystal_clearP.hide();
-    crystal_clear.prop('checked', false);
-    crystal_clear.prop('disabled', true);
     concealedP.hide();
     concealed.prop('checked', false);
     concealed.prop('disabled', true);
@@ -905,7 +882,6 @@ function calculateImageScale() {
 
     displayImage(imageId);
     if (!$('#keep_selection').prop('checked')) {
-      $('#crystal_clear').prop('checked', false);
       $('#concealed').prop('checked', false);
       $('#blurred').prop('checked', false);
     }

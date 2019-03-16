@@ -37,7 +37,6 @@ class Annotation(models.Model):
 
     image = models.ForeignKey(Image, on_delete=models.CASCADE, related_name='annotations')
     vector = JSONField(null=True)
-    _crystal_clear = models.BooleanField(default=False)
     _concealed = models.BooleanField(default=False)
     _blurred = models.BooleanField(default=False)
     closed = models.BooleanField(default=False)
@@ -58,10 +57,6 @@ class Annotation(models.Model):
 
     def __str__(self):
         return 'Annotation: {0}'.format(self.annotation_type.name)
-
-    @property
-    def crystal_clear(self):
-        return self.annotation_type.enable_crystal_clear and self._crystal_clear and not self.not_in_image
 
     @property
     def concealed(self):
@@ -412,7 +407,6 @@ class AnnotationType(models.Model):
     vector_type = models.IntegerField(default=VECTOR_TYPE.BOUNDING_BOX)
     # Number of required nodes (in polygon and multiline) 0->unspecified
     node_count = models.IntegerField(default=0)
-    enable_crystal_clear = models.BooleanField(default=True)
     enable_concealed = models.BooleanField(default=True)
     enable_blurred = models.BooleanField(default=True)
 
@@ -571,7 +565,6 @@ class ExportFormat(models.Model):
     name_format = models.CharField(default='export_%%exportid.txt', max_length=200)
     min_verifications = models.IntegerField(default=0)
     image_aggregation = models.BooleanField(default=False)
-    include_crystal_clear = models.BooleanField(default=True)
     include_blurred = models.BooleanField(default=True)
     include_concealed = models.BooleanField(default=True)
 

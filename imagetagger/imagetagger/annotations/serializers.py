@@ -12,7 +12,6 @@ class AnnotationTypeSerializer(ModelSerializer):
             'name',
             'vector_type',
             'node_count',
-            'enable_crystal_clear',
             'enable_concealed',
             'enable_blurred',
         )
@@ -34,7 +33,6 @@ class AnnotationSerializer(ModelSerializer):
             'vector',
             'verified_by_user',
             'image',
-            'crystal_clear',
             'concealed',
             'blurred',
         )

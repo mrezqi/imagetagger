@@ -19,7 +19,6 @@ class ExportFormatCreationForm(forms.ModelForm):
             'name_format',
             'min_verifications',
             'image_aggregation',
-            'include_crystal_clear',
             'include_blurred',
             'include_concealed',
         ]
@@ -40,7 +39,6 @@ class ExportFormatEditForm(forms.ModelForm):
             'name_format',
             'min_verifications',
             'image_aggregation',
-            'include_crystal_clear',
             'include_blurred',
             'include_concealed',
         ]
